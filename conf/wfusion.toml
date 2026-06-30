@@ -103,6 +103,22 @@ bind = "127.0.0.1:19080"
 [admin_api.auth]
 token_file = "${HOME}/.warp_fusion/admin_api.token"
 
+# Remote rule-source sync (dual-repo):
+#   - models  ← wf-rules        (rules/scenarios/schemas)
+#   - infra   ← wf-conf-example  (conf/topology/connectors)
+# `wfadm init --repo` bootstraps from wf-conf-example; afterwards
+# `wfadm conf update --group models|infra` syncs each group independently.
+[project_remote]
+enabled = true
+
+[project_remote.models]
+repo = "https://github.com/wp-labs/wf-rules.git"
+init_version = "0.1.0"
+
+[project_remote.infra]
+repo = "https://github.com/wp-labs/wf-conf-example.git"
+init_version = "0.1.0"
+
 [logging]
 level = "debug"
 format = "plain"
