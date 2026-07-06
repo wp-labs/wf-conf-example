@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# wf-rules/test/run.sh — 有限时长 TCP daemon 联调脚本
+# wf-conf-example/test_run.sh — 有限时长 TCP daemon 联调脚本
 # 从项目根目录运行
 
 cd "$(dirname "${BASH_SOURCE[0]}")"  # cd to project root/
@@ -32,7 +32,7 @@ if [ "$DURATION_SECONDS" -le 0 ]; then
 fi
 
 echo "============================================"
-echo "  wf-rules tcp integration: wfgen stream → wfusion"
+echo "  wf-conf-example tcp integration: wfgen stream → wfusion"
 echo "============================================"
 echo "  duration=$DURATION (${DURATION_SECONDS}s), interval=${INTERVAL}s, rate_sleep=${RATE_SLEEP}ms"
 echo "============================================"
@@ -45,21 +45,10 @@ trap cleanup EXIT
 
 # ── helpers ──
 
-# kill with grace period, force SIGKILL if needed
+# Stop a bounded background task and reap it to avoid shell job-status noise.
 kill_wait() {
     local pid="$1"
-    local timeout="${2:-15}"
     kill "$pid" 2>/dev/null || true
-    local elapsed=0
-    while [ "$elapsed" -lt "$timeout" ]; do
-        if ! kill -0 "$pid" 2>/dev/null; then
-            return 0
-        fi
-        sleep 1
-        elapsed=$((elapsed + 1))
-    done
-    echo "   (force killing pid=$pid after ${timeout}s)" >&2
-    kill -9 "$pid" 2>/dev/null || true
     wait "$pid" 2>/dev/null || true
 }
 
@@ -89,7 +78,7 @@ WFL_ARGS=()
 for f in models/rules/*.wfl; do WFL_ARGS+=(--wfl "$f"); done
 wfgen stream \
     --scenario-dir models/scenarios/ \
-    --ws models/schemas/network.wfs --ws models/schemas/auth.wfs --ws models/schemas/http.wfs --ws models/schemas/dns.wfs --ws models/schemas/management.wfs --ws models/schemas/data.wfs \
+    --ws models/schemas/network.wfs \
     "${WFL_ARGS[@]}" \
     --addr 127.0.0.1:9800 \
     --interval "$INTERVAL" \

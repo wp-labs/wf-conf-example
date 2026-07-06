@@ -1,0 +1,26 @@
+# wf-conf-example smoke test config.
+#
+# This config intentionally uses batch/file replay instead of TCP so it can be
+# used as a deterministic availability check for the example project.
+
+mode = "batch"
+sinks = "topology/sinks"
+windows = "models/schemas/windows.toml"
+
+[[sources]]
+connect = "file_src"
+name = "seed_conn_events"
+path = "data/generated/port_scan.jsonl"
+stream = "conn_events"
+data_format = "ndjson"
+
+[runtime]
+executor_parallelism = 4
+rule_exec_timeout = "30s"
+schemas = "models/schemas/*.wfs"
+rules = "models/rules/port_scan.wfl"
+
+[logging]
+level = "info"
+format = "plain"
+file = "data/wfusion.log"
