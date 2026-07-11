@@ -11,7 +11,7 @@ windows = "models/schemas/windows.toml"
 connect = "file_src"
 name = "seed_conn_events"
 path = "data/generated/port_scan.jsonl"
-stream = "conn_events"
+stream_tag = "conn_events"
 data_format = "ndjson"
 
 [runtime]

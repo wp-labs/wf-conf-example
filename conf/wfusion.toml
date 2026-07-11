@@ -33,11 +33,11 @@ enabled = true
 
 [project_remote.models]
 repo = "https://github.com/wp-labs/wf-rules.git"
-init_version = "0.1.0"
+init_version = "v0.1.5"
 
 [project_remote.infra]
 repo = "https://github.com/wp-labs/wf-conf-example.git"
-init_version = "0.1.0"
+init_version = "v0.1.3"
 
 [logging]
 level = "debug"
